@@ -1,30 +1,26 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 const port = process.env.PORT || 3000;
-
 module.exports = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: {
+    vendor: ['semantic-ui-react'],
+    app: './src/index.js'
+  },
   output: {
-    filename: '[name]].[hash].js',
+    filename: '[name].[hash].js',
     publicPath: '/'
   },
   devtool: 'inline-source-map',
   module: {
-    rules: [
-      // First Rule
-      {
+    rules: [{
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: ['babel-loader']
       },
-
-      // Second Rule
       {
         test: /\.css$/,
-        use: [
-          {
+        use: [{
             loader: 'style-loader'
           },
           {
@@ -39,13 +35,24 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'initial',
+          test: 'vendor',
+          name: 'vendor',
+          enforce: true
+        }
+      }
+    }
+  },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/index.html',
       favicon: 'public/favicon.ico'
-    }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    })
   ],
   devServer: {
     host: 'localhost',
