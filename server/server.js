@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 
 app.use('/', express.static(publicPath));
 
-// express will serve up index.html if it doesn't recognize the route
+// express will serve up index.html if it doesn't recognize the route.
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
